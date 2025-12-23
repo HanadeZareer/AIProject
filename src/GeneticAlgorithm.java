@@ -5,7 +5,7 @@ import java.util.Random;
 public class GeneticAlgorithm {
 
     static int POP_SIZE = 150;
-    static int ELITE = 2;                 // keep best ELITE unchanged
+    static int ELITE = 2;                 // Best ELITE unchanged
     static double CROSS_RATE = 0.85;
     static double MUT_RATE = 0.01;        // per-gene probability
     static int TOURNAMENT_K = 3;
@@ -162,7 +162,7 @@ public class GeneticAlgorithm {
         double[] mutRates = {0.001, 0.005, 0.01, 0.02, 0.05};
         int trials = 20;
 
-        FileWriter summary = new FileWriter("tuning_summary.csv");
+        FileWriter summary = new FileWriter("mutation_tuning.csv");
         summary.write("mutRate,trials,successes,avgGenerations,avgTimeMs\n");
 
         for (int m = 0; m < mutRates.length; m++) {
@@ -192,9 +192,86 @@ public class GeneticAlgorithm {
         }
 
         summary.close();
-
-        System.out.println("Wrote: convergence_curve.csv and tuning_summary.csv");
     }
+
+    public void runWithDifferentCrossoverRate(int[] passcode) throws Exception {
+
+        double[] crossRates = {0.5, 0.6, 0.7, 0.8, 0.9};
+        int trials = 20;
+
+        FileWriter fw = new FileWriter("crossover_tuning.csv");
+        fw.write("crossRate,trials,successes,avgGenerations,avgTimeMs\n");
+
+        for (int i = 0; i < crossRates.length; i++) {
+            CROSS_RATE = crossRates[i];
+
+            int successes = 0;
+            long genSum = 0;
+            long timeSum = 0;
+
+            for (int t = 0; t < trials; t++) {
+                Result rr = runOnce(passcode, null);
+
+                if (rr.isSuccess()) {
+                    successes++;
+                    genSum += rr.getGenerations();
+                    timeSum += rr.getTimeMs();
+                }
+            }
+
+            double avgGen = (successes > 0) ? (double) genSum / successes : -1;
+            double avgTime = (successes > 0) ? (double) timeSum / successes : -1;
+
+            fw.write(CROSS_RATE + "," + trials + "," + successes + "," +
+                    avgGen + "," + avgTime + "\n");
+
+            System.out.println("CROSS_RATE=" + CROSS_RATE +
+                    " success=" + successes + "/" + trials +
+                    " avgGen=" + avgGen);
+        }
+
+        fw.close();
+    }
+
+    public void runWithDifferentPopulationSize(int[] passcode) throws Exception {
+
+        int[] popSizes = {30, 50, 100, 150, 200};
+        int trials = 20;
+
+        FileWriter fw = new FileWriter("population_tuning.csv");
+        fw.write("popSize,trials,successes,avgGenerations,avgTimeMs\n");
+
+        for (int p = 0; p < popSizes.length; p++) {
+            POP_SIZE = popSizes[p];
+
+            int successes = 0;
+            long genSum = 0;
+            long timeSum = 0;
+
+            for (int t = 0; t < trials; t++) {
+               Result rr = runOnce(passcode, null);
+
+                if (rr.isSuccess()) {
+                    successes++;
+                    genSum += rr.getGenerations();
+                    timeSum += rr.getTimeMs();
+                }
+            }
+
+            double avgGen = (successes > 0) ? (double) genSum / successes : -1;
+            double avgTime = (successes > 0) ? (double) timeSum / successes : -1;
+
+            fw.write(POP_SIZE + "," + trials + "," + successes + "," +
+                    avgGen + "," + avgTime + "\n");
+
+            System.out.println("POP_SIZE=" + POP_SIZE +
+                    " success=" + successes + "/" + trials +
+                    " avgGen=" + avgGen);
+        }
+
+        fw.close();
+    }
+
 
 
 }
