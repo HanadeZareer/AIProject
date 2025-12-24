@@ -5,8 +5,8 @@ public class Passcode {
     static Random random = new Random();
 
     static int[] randomPasscode() {
-        int[] p = new int[Parent.CHROM_LEN];
-        for (int i = 0; i < Parent.CHROM_LEN; i++) p[i] = random.nextBoolean() ? 1 : 0;
+        int[] p = new int[Chromosome.CHROM_LEN];
+        for (int i = 0; i < Chromosome.CHROM_LEN; i++) p[i] = random.nextBoolean() ? 1 : 0;
         return p;
     }
 

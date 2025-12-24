@@ -5,11 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fd9e6c5-9c08-485a-9905-b455670e5372" name="Changes" comment="first commit">
+      <change afterPath="$PROJECT_DIR$/src/Chromosome.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/convergence_curve.csv" beforeDir="false" afterPath="$PROJECT_DIR$/convergence_curve.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crossover_tuning.csv" beforeDir="false" afterPath="$PROJECT_DIR$/crossover_tuning.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mutation_tuning.csv" beforeDir="false" afterPath="$PROJECT_DIR$/mutation_tuning.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/population_tuning.csv" beforeDir="false" afterPath="$PROJECT_DIR$/population_tuning.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GeneticAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GeneticAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tuning_summary.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tuning_summary.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Passcode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Passcode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning_summary.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

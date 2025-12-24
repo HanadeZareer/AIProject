@@ -10,33 +10,33 @@ public class GeneticAlgorithm {
     static double MUT_RATE = 0.01;        // per-gene probability
     static int TOURNAMENT_K = 3;
     static int MAX_GENERATIONS = 20000;
-    static final int CHROM_LEN = Parent.CHROM_LEN;
+    static final int CHROM_LEN = Chromosome.CHROM_LEN;
 
     static final Random random = new Random();
 
 
-    private void evaluate(Parent parent, int[] passcode) {
+    private void evaluate(Chromosome chromosome, int[] passcode) {
         int score = 0;
         for (int i = 0; i < CHROM_LEN; i++) {
-            if (parent.genes[i] == passcode[i]) score++;
+            if (chromosome.genes[i] == passcode[i]) score++;
         }
-        parent.fitness = score;
+        chromosome.fitness = score;
     }
 
-    private void evaluatePop(Parent[] pop, int[] passcode) {
+    private void evaluatePop(Chromosome[] pop, int[] passcode) {
         for (int i = 0; i < pop.length; i++)
             evaluate(pop[i], passcode);
     }
 
-    private Parent bestOfPop(Parent[] pop) {
-        Parent best = pop[0];
+    private Chromosome bestOfPop(Chromosome[] pop) {
+        Chromosome best = pop[0];
         for (int i = 1; i < pop.length; i++) {
             if (pop[i].fitness > best.fitness) best = pop[i];
         }
         return best;
     }
 
-    private void sortPopDescByFitness(Parent[] pop) {
+    private void sortPopDescByFitness(Chromosome[] pop) {
 
         for (int i = 0; i < pop.length - 1; i++) {
             int bestIdx = i;
@@ -44,14 +44,14 @@ public class GeneticAlgorithm {
                 if (pop[j].fitness > pop[bestIdx].fitness) bestIdx = j;
             }
             if (bestIdx != i) {
-                Parent tmp = pop[i];
+                Chromosome tmp = pop[i];
                 pop[i] = pop[bestIdx];
                 pop[bestIdx] = tmp;
             }
         }
     }
 
-    private Parent tournamentSelect(Parent[] pop) {
+    private Chromosome tournamentSelect(Chromosome[] pop) {
         int bestIdx = random.nextInt(pop.length);
         for (int i = 1; i < TOURNAMENT_K; i++) {
             int idx = random.nextInt(pop.length);
@@ -60,9 +60,9 @@ public class GeneticAlgorithm {
         return pop[bestIdx];
     }
 
-    static Parent[] crossover(Parent p1, Parent p2) {
-        Parent c1 = new Parent();
-        Parent c2 = new Parent();
+    private Chromosome[] crossover(Chromosome p1, Chromosome p2) {
+        Chromosome c1 = new Chromosome();
+        Chromosome c2 = new Chromosome();
 
         // Single-point crossover
         int cut = 1 + random.nextInt(CHROM_LEN - 1);
@@ -75,21 +75,21 @@ public class GeneticAlgorithm {
                 c2.genes[i] = p1.genes[i];
             }
         }
-        return new Parent[]{c1, c2};
+        return new Chromosome[]{c1, c2};
     }
 
-    private void mutate(Parent parent) {
+    private void mutate(Chromosome chromosome) {
         for (int i = 0; i < CHROM_LEN; i++) {
             if (random.nextDouble() < MUT_RATE) {
-                parent.genes[i] = 1 - parent.genes[i]; // flip bit
+                chromosome.genes[i] = 1 - chromosome.genes[i]; // flip bit
             }
         }
     }
 
     public  Result runOnce(int[] passcode, String curveCsvPath) throws IOException {
-        Parent[] pop = new Parent[POP_SIZE];
+        Chromosome[] pop = new Chromosome[POP_SIZE];
         for (int i = 0; i < POP_SIZE; i++)
-            pop[i] = Parent.randomParent();
+            pop[i] = Chromosome.randomChromosome();
         evaluatePop(pop, passcode);
 
         long start = System.currentTimeMillis();
@@ -101,7 +101,7 @@ public class GeneticAlgorithm {
         }
 
         for (int gen = 0; gen <= MAX_GENERATIONS; gen++) {
-            Parent best = bestOfPop(pop);
+            Chromosome best = bestOfPop(pop);
 
             if (curve != null)
                 curve.write(gen + "," + best.fitness + "\n");
@@ -116,18 +116,19 @@ public class GeneticAlgorithm {
 
 
             sortPopDescByFitness(pop);
-            Parent[] next = new Parent[POP_SIZE];
-            for (int i = 0; i < ELITE; i++) next[i] = pop[i].copy();
+            Chromosome[] next = new Chromosome[POP_SIZE];
+            for (int i = 0; i < ELITE; i++)
+                next[i] = pop[i].copy();
 
             int idx = ELITE;
             while (idx < POP_SIZE) {
-                Parent p1 = tournamentSelect(pop);
-                Parent p2 = tournamentSelect(pop);
+                Chromosome p1 = tournamentSelect(pop);
+                Chromosome p2 = tournamentSelect(pop);
 
-                Parent child1, child2;
+                Chromosome child1, child2;
 
                 if (random.nextDouble() < CROSS_RATE) {
-                    Parent[] kids = crossover(p1, p2);
+                    Chromosome[] kids = crossover(p1, p2);
                     child1 = kids[0];
                     child2 = kids[1];
                 } else {
